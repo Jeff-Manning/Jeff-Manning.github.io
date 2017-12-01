@@ -4,7 +4,6 @@
 <script type="text/javascript" src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
 <script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script> 
 <script type = "text/javascript" >
-
 window.onload = function () {
 	var dataPoints = [{y : 0}];
 	var chart = new CanvasJS.Chart("chartContainer", {
@@ -16,10 +15,9 @@ window.onload = function () {
 	
     chart.render();
 	var yVal = 15, updateCount = 0;
-	
+	var total = 0;
     var updateChart = function () {
-
-        var imageAddr = "https://github.com/Jeff-Manning/Jeff-Manning.github.io/blob/master/snake%20river.jpg"; 
+        var imageAddr = "https://github.com/Jeff-Manning/Jeff-Manning.github.io/blob/master/snake%20river.jpg?raw=true"; 
         var startTime, endTime;
         var downloadSize = 5245329;
         var download = new Image();
@@ -37,11 +35,16 @@ window.onload = function () {
             var speedKbps = (speedBps / 1024).toFixed(2);
             var speedMbps = (speedKbps / 1024).toFixed(2);
 
-            console.log(speedMbps);
 		    yVal = parseInt(speedMbps);
       	
             updateCount++;
+            total = total + yVal;
+            var average = total / updateCount;
 		
+            console.log(updateCount);
+
+            document.getElementById('average').innerHTML = "Average: " + average.toFixed(2).toString() + " Mbps";   
+            
 		    dataPoints.push({ y : yVal });
       	
             chart.options.title.text = "Update " + updateCount;
@@ -51,12 +54,14 @@ window.onload = function () {
 
 	// update chart every second
 	setInterval(function(){updateChart()}, 1000);
+
 }	
 </script>
 </head>
 <body>
-        
+<div id="average">0</div>    
 <div id = "chartContainer" style = "height: 300px; width: 100%;" />
+
 </body>
 </html>
 
