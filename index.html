@@ -1,1 +1,64 @@
-Hello World
+<!DOCTYPE HTML>
+<html>
+<head>
+<script type="text/javascript" src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script> 
+<script type = "text/javascript" >
+
+window.onload = function () {
+	var dataPoints = [{y : 0}];
+	var chart = new CanvasJS.Chart("chartContainer", {
+			title : { text : "Dynamic Data" },
+			data : [{ type : "spline",
+					  dataPoints : dataPoints }],
+            axisY : { maximum : 150  }
+		});
+	
+    chart.render();
+	var yVal = 15, updateCount = 0;
+	
+    var updateChart = function () {
+
+        var imageAddr = "http://www.kenrockwell.com/contax/images/g2/examples/31120037-5mb.jpg"; 
+        var startTime, endTime;
+        var downloadSize = 4995374;
+        var download = new Image();
+
+        startTime = new Date().getTime();
+        var cacheBuster = "?nnn=" + startTime;
+        download.src = imageAddr + cacheBuster;
+
+        download.onload = function () {
+            endTime = (new Date()).getTime();
+
+            var duration = (endTime - startTime) / 1000;
+            var bitsLoaded = downloadSize * 8;
+            var speedBps =  (bitsLoaded / duration).toFixed(2);
+            var speedKbps = (speedBps / 1024).toFixed(2);
+            var speedMbps = (speedKbps / 1024).toFixed(2);
+
+            console.log(speedMbps);
+		    yVal = parseInt(speedMbps);
+      	
+            updateCount++;
+		
+		    dataPoints.push({ y : yVal });
+      	
+            chart.options.title.text = "Update " + updateCount;
+		    chart.render();    
+        }
+	};
+
+	// update chart every second
+	setInterval(function(){updateChart()}, 1000);
+}	
+</script>
+</head>
+<body>
+        
+<div id = "chartContainer" style = "height: 300px; width: 100%;" />
+</body>
+</html>
+
+
+// calculate packet loss
